@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
+QT       += core network
 QT       -= gui
 
 TARGET = QTBUG47036_Test
@@ -15,4 +14,7 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp sockettx.cpp \
+    worker.cpp
+HEADERS += sockettx.h \
+    worker.h
