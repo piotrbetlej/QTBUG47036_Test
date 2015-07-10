@@ -10,6 +10,9 @@ MyTcpServer::MyTcpServer(QObject *parent) :
     connect(server, SIGNAL(newConnection()),
             this, SLOT(newConnection()));
 
+    connect(server, SIGNAL(acceptError(QAbstractSocket::SocketError)),
+            this, SLOT(e(QAbstractSocket::SocketError)));
+
     if(!server->listen(QHostAddress::Any, 9998))
     {
         qDebug() << "Server could not start";
@@ -20,6 +23,11 @@ MyTcpServer::MyTcpServer(QObject *parent) :
     }
 }
 
+void MyTcpServer::e(QAbstractSocket::SocketError e) {
+
+    qDebug() << "Error"  << e;
+}
+
 void MyTcpServer::newConnection()
 {
     // need to grab the socket
@@ -28,12 +36,27 @@ void MyTcpServer::newConnection()
     if (socket == 0)
             return;
 
-    socket->write("Hello client\r\n");
+    QString boundary = "myboundary";
+
+    QString headerStr =
+                "HTTP/1.0 200 OK\r\n" \
+                        "Server: iRecon\r\n" \
+                        "Connection: close\r\n" \
+                        "Max-Age: 0\r\n" \
+                        "Expires: 0\r\n" \
+                        "Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0\r\n" \
+                        "Pragma: no-cache\r\n" \
+                        "Content-Type: multipart/x-mixed-replace; " \
+                        "boundary=" + boundary + "\r\n" \
+                        "\r\n" \
+                        "--" + boundary + "\r\n";
+
+    socket->write(headerStr.toUtf8());
     socket->flush();
 
     socket->waitForBytesWritten(3000);
 
-    startWorker(socket);
+    //startWorker(socket);
     //socket->close();
 }
 

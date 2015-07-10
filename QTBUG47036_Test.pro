@@ -15,6 +15,8 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp sockettx.cpp \
-    worker.cpp
+    worker.cpp \
+    receiver.cpp
 HEADERS += sockettx.h \
-    worker.h
+    worker.h \
+    receiver.h

@@ -21,7 +21,7 @@ signals:
 public slots:
     void newConnection();
     void handleResults(const QString &);
-
+    void e(QAbstractSocket::SocketError e);
 private:
     QTcpServer *server;
     QThread workerThread;
